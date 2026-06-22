@@ -151,7 +151,7 @@
   });
   nextPageBtn.addEventListener('click',()=>{
     const pagesToShow = Number(previewModeEl.value) || 2;
-    state.currentPage = Math.min(state.pages.length - 1, state.currentPage + pagesToShow);
+    state.currentPage = Math.min(pagesToShow == 2 ? (Math.floor((state.pages.length - 1) / 2) * 2) : state.pages.length - 1, state.currentPage + pagesToShow);
     updatePreview();
   });
 
@@ -320,9 +320,7 @@
     // track whether the current page so far contains only user header lines (no items/list-headers yet)
     let curHasOnlyHeader = false;
     function flushCur(){ if(cur.length){ pages.push(cur.slice()); cur = []; curCount = 0; } curHasOnlyHeader = false; }
-    // console.log(contentStream)
     let insertedSingleHeader = false;
-    console.clear();
     for(const e of contentStream){
 
       // If we reach the first item and there is a single non-repeating list header, try to insert it now
@@ -424,9 +422,7 @@
       } else {
         // push entry and update header-only state
         if(e.type === 'item' && repeatHeader && listHeaderRaw && curHasOnlyHeader) {
-            console.log("Hahahahah")
             if(curCount + cost > LINES_PER_PAGE){
-                console.log("curtCount:", curCount);
                 if(curCount > 0) flushCur();
                 // start new page with header
                 cur.push(listHeaderRaw);
@@ -440,7 +436,6 @@
             } else {
                 // current page can accept the item; ensure header is present at top if page is empty
                 if(!cur.includes(listHeaderRaw)){
-                    console.log("adding list header")
                     cur.push(listHeaderRaw);
                     curCount += listHeaderVisualCount;
                 }
@@ -458,7 +453,6 @@
           curHasOnlyHeader = false;
         }
       }
-      console.log(cur)
     }
     if(cur.length) pages.push(cur.slice());
 
@@ -523,7 +517,14 @@
   function updatePreview(){
     const pagesToShow = Number(previewModeEl.value) || 2;
     if(state.pages.length===0){
-      bookTextLeft.textContent=''; bookTextRight.textContent=''; pageLabel.textContent='0 / 0'; statPages.textContent='0'; statItems.textContent='0'; statView.textContent='-'; return
+      bookTextLeft.textContent = '';
+      bookTextRight.textContent = '';
+      labelLeft.textContent = '';
+      labelRight.textContent = '';
+      pageLabel.textContent = '0 / 0';
+      statPages.textContent = '0';
+      statItems.textContent = '0';
+      statView.textContent = '-';
     }
 
     // set blit size per Scribble blit behaviour and apply preview scale
@@ -588,6 +589,12 @@
       bookTextRight.style.lineHeight = '1';
       // ensure text cannot overflow visually below page area
       // overflow is hidden via CSS; we keep line-height tightened to fit
+    }
+
+    if (state.pages.length === 0) {
+        labelLeft.textContent = `Page 0`;
+        labelRight.textContent = pagesToShow===2 ? `Page 0` : '';
+        return;
     }
 
     // left and right page text come from state.pages (which now hold unwrapped entry texts).
