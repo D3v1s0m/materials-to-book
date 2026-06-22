@@ -1,0 +1,75 @@
+:root{
+  --bg:#0b0f12; --card:#0f1518; --muted:#9aa4a6; --accent:#6ee7b7; --panel:#0c1113; --text:#e6f1ef;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,'Apple Color Emoji','Segoe UI Emoji';background:linear-gradient(180deg,#071011 0%, #071620 100%);color:var(--text);min-height:97.9vh}
+.app{display:grid;grid-template-columns:420px 1fr;grid-template-rows:auto 1fr;grid-template-areas:"header header" "left right";gap:20px;max-width:1200px;margin:20px auto;padding:20px;width:calc(100% - 40px)}
+.pane{min-width:0}
+.pane h2{margin-top:0;margin-bottom:12px}
+.left{grid-area:left}
+.right{grid-area:right}
+.card{background:var(--card);padding:14px;border-radius:8px;margin-bottom:16px;box-shadow:0 4px 20px rgba(2,6,8,0.6)}
+.app-header{grid-area:header;align-self:start}
+.app-header h1{font-size:28px;margin:0;padding-bottom:8px;text-align:center}
+.dropzone{border:2px dashed rgba(255,255,255,0.06);padding:20px;border-radius:6px;text-align:center;color:var(--muted)}
+.meta{margin-top:8px;color:var(--muted);font-size:13px}
+.row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.row.small{font-size:13px}
+input[type=text],input[type=number],select{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px;border-radius:6px;color:var(--text)}
+label{font-size:14px}
+.book-wrap{position:relative;margin-top:12px}
+.book-canvas{display:flex;justify-content:center}
+.blit{position:relative;overflow:hidden;display:block}
+#bookCanvas{position:absolute;left:0;top:0;display:block}
+.book-text{position:absolute;white-space:pre-wrap;font-family: 'Minecraftia', monospace, ui-monospace;line-height:1.1;font-size:12px;color:#0b1311;background:transparent;padding:0;margin:0;overflow:hidden}
+.book-text.left{left:36px;top:30px;width:114px;height:128px;padding:6px}
+.book-text.right{left:162px;top:30px;width:114px;height:128px;padding:6px}
+.page-labels{display:flex;justify-content:center;gap:220px;margin-top:6px;color:var(--muted);font-size:13px}
+.preview-stats{display:flex;gap:18px;margin-top:8px;color:var(--muted)}
+.card input, .card select, .card button { font-family: inherit }
+
+/* Themed form controls */
+input[type=text], input[type=number], textarea, select {
+  background:#0b1314;
+  border:1px solid rgba(255,255,255,0.06);
+  color:var(--text);
+  padding:8px 10px;
+  border-radius:8px;
+  outline: none;
+}
+input[type=text]:focus, input[type=number]:focus, textarea:focus, select:focus {
+  box-shadow:0 0 0 3px rgba(110,231,183,0.08);
+  border-color:rgba(110,231,183,0.25);
+}
+input[type=checkbox] {
+  accent-color: var(--accent);
+  width:16px; height:16px;
+}
+select { appearance:none; -webkit-appearance:none; background-image:linear-gradient(45deg, transparent 50%, var(--text) 50%), linear-gradient(135deg, var(--text) 50%, transparent 50%); background-position: calc(100% - 14px) calc(1em + 2px), calc(100% - 9px) calc(1em + 2px); background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; padding-right:28px }
+
+/* optional Minecraft font if bundled in assets/ */
+@font-face{
+  font-family: 'Minecraftia';
+  src: url('assets/minecraftia.ttf') format('truetype');
+  font-display:swap;
+}
+.preview-controls{display:flex;justify-content:space-between;align-items:center}
+.nav{display:flex;gap:8px;align-items:center}
+button{background:#0b2320;border:1px solid rgba(255,255,255,0.04);color:var(--text);padding:8px 10px;border-radius:6px}
+.json-block{background:#081214;border-radius:6px;padding:8px;margin-top:8px;max-height:320px;overflow:auto}
+.book-wrap{position:relative;margin-top:12px}
+.book-canvas{display:flex;justify-content:center}
+.blit{position:relative;overflow:hidden;display:block}
+.book-text{position:absolute;white-space:pre-wrap;font-family: 'Minecraftia', monospace, ui-monospace;line-height:1.1;font-size:12px;color:#0b1311;background:transparent;padding:0;margin:0}
+.book-text.left{left:36px;top:30px;width:114px;height:128px;padding:6px}
+.book-text.right{left:162px;top:30px;width:114px;height:128px;padding:6px}
+.page-labels{display:flex;justify-content:center;gap:220px;margin-top:6px;color:var(--muted);font-size:13px}
+.preview-stats{display:flex;gap:18px;margin-top:8px;color:var(--muted)}
+
+@media(max-width:900px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto auto auto;grid-template-areas:"header" "left" "right";padding:12px}
+  .page-labels{gap:60px}
+  .preview-stats{flex-direction:column}
+  .book-wrap{height:300px}
+  .book-text{font-size:11px}
+}

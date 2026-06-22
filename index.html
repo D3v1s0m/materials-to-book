@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Litematica CSV → Scribble Book JSON Generator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1>Litematica CSV → Scribble Book JSON Generator</h1>
+    </header>
+
+    <section class="pane left">
+      <div class="card upload">
+        <h2>Upload</h2>
+        <div id="dropzone" class="dropzone">Drop CSV here or <button id="browseBtn">Browse</button></div>
+        <input id="fileInput" type="file" accept="text/csv" style="display:none">
+        <div class="meta">
+          <div>File: <span id="filename">—</span></div>
+          <div>Total items: <span id="totalItems">0</span></div>
+          <div>Generated pages: <span id="generatedPages">0</span></div>
+        </div>
+      </div>
+
+      <div class="card settings">
+        <h2>Settings</h2>
+
+        <label>Author: <input id="author" value="D3v1s0m"></label>
+
+        <div class="row">
+          <label><input id="enableHeader" type="checkbox"> Enable Header</label>
+        </div>
+        <div class="row">
+          <textarea id="headerText" placeholder="Header text (supports multiple lines)" rows="2" disabled></textarea>
+        </div>
+
+        <div class="row">
+          <label><input id="enableFooter" type="checkbox"> Enable Footer</label>
+        </div>
+        <div class="row">
+          <textarea id="footerText" placeholder="Footer text (supports multiple lines)" rows="2" disabled></textarea>
+        </div>
+
+        <div class="row">
+          <label><input id="includeSummary" type="checkbox"> Include Summary Page</label>
+        </div>
+
+        <div class="row">
+          <label><input id="showListHeader" type="checkbox"> Show List Header</label>
+        </div>
+
+        <div class="row">
+          <label><input id="repeatListHeader" type="checkbox"> Repeat List Header On Every Page</label>
+        </div>
+
+        <div class="row">
+          <label><input id="enableChecklist" type="checkbox"> Enable Checklist</label>
+          <select id="checklistStyle">
+            <option value="unicode">Unicode</option>
+            <option value="vanilla">Vanilla</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Item Format</label>
+          <input id="itemFormat" value="{check}{item}: {total}">
+        </div>
+
+        <div class="row">
+          <label><input id="showStack" type="checkbox"> Show Stack Information</label>
+          <label style="margin-left:8px"> <input id="showShulker" type="checkbox"> Show Shulker Boxes</label>
+        </div>
+        <div class="row small">
+          <label>Shulker threshold (stacks): <input id="shulkerThreshold" type="number" value="27" min="1"></label>
+        </div>
+
+        <details>
+          <summary>Advanced Pagination</summary>
+          <div class="row small">
+            <label>Page width (px): <input id="pageWidth" type="number" value="114"></label>
+          </div>
+          <div class="row small">
+            <label>Lines per page: <input id="linesPerPage" type="number" value="14"></label>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="pane right">
+      <div class="card preview">
+        <h2>Preview</h2>
+        <div class="preview-controls">
+          <label>Pages To Show: <select id="previewMode"><option value="1">1 Page</option><option value="2" selected>2 Pages</option></select></label>
+          <div class="nav">
+            <button id="prevPage">◀ Prev</button>
+            <span id="pageLabel">0 / 0</span>
+            <button id="nextPage">Next ▶</button>
+          </div>
+        </div>
+
+        <div class="book-wrap">
+          <div class="book-canvas">
+            <div id="blit" class="blit">
+                <canvas id="bookCanvas"></canvas>
+                <pre id="bookTextLeft" class="book-text left" aria-live="polite"></pre>
+                <pre id="bookTextRight" class="book-text right" aria-live="polite"></pre>
+              </div>
+          </div>
+        </div>
+        <div class="page-labels"><span id="labelLeft"></span><span id="labelRight"></span></div>
+        <div class="preview-stats small">
+          <div>Pages Generated: <span id="statPages">0</span></div>
+          <div>Items: <span id="statItems">0</span></div>
+          <div>Current View: <span id="statView">-</span></div>
+        </div>
+      </div>
+
+      <div class="card export">
+        <h2>Export</h2>
+        <div class="row">
+          <button id="copyBtn">Copy JSON</button>
+          <button id="downloadBtn">Download JSON</button>
+          <button id="toggleJson">▶ Show JSON</button>
+        </div>
+
+        <div id="jsonBlock" class="json-block" style="display:none"><pre id="jsonPreview"></pre></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
