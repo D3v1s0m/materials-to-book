@@ -1,0 +1,1467 @@
+[
+  {
+    "id": "minecraft:shulker_box",
+    "name": "Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:white_shulker_box",
+    "name": "White Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:orange_shulker_box",
+    "name": "Orange Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:magenta_shulker_box",
+    "name": "Magenta Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:light_blue_shulker_box",
+    "name": "Light Blue Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:yellow_shulker_box",
+    "name": "Yellow Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:lime_shulker_box",
+    "name": "Lime Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:pink_shulker_box",
+    "name": "Pink Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:gray_shulker_box",
+    "name": "Gray Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:light_gray_shulker_box",
+    "name": "Light Gray Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:cyan_shulker_box",
+    "name": "Cyan Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:purple_shulker_box",
+    "name": "Purple Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:blue_shulker_box",
+    "name": "Blue Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:brown_shulker_box",
+    "name": "Brown Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:green_shulker_box",
+    "name": "Green Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:red_shulker_box",
+    "name": "Red Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:black_shulker_box",
+    "name": "Black Shulker Box",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:saddle",
+    "name": "Saddle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:white_harness",
+    "name": "White Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:orange_harness",
+    "name": "Orange Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:magenta_harness",
+    "name": "Magenta Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:light_blue_harness",
+    "name": "Light Blue Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:yellow_harness",
+    "name": "Yellow Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:lime_harness",
+    "name": "Lime Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:pink_harness",
+    "name": "Pink Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:gray_harness",
+    "name": "Gray Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:light_gray_harness",
+    "name": "Light Gray Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:cyan_harness",
+    "name": "Cyan Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:purple_harness",
+    "name": "Purple Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:blue_harness",
+    "name": "Blue Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:brown_harness",
+    "name": "Brown Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:green_harness",
+    "name": "Green Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:red_harness",
+    "name": "Red Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:black_harness",
+    "name": "Black Harness",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:minecart",
+    "name": "Minecart",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:chest_minecart",
+    "name": "Minecart with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:furnace_minecart",
+    "name": "Minecart with Furnace",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:tnt_minecart",
+    "name": "Minecart with TNT",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:hopper_minecart",
+    "name": "Minecart with Hopper",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:carrot_on_a_stick",
+    "name": "Carrot on a Stick",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:warped_fungus_on_a_stick",
+    "name": "Warped Fungus on a Stick",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:elytra",
+    "name": "Elytra",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:oak_boat",
+    "name": "Oak Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:oak_chest_boat",
+    "name": "Oak Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:spruce_boat",
+    "name": "Spruce Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:spruce_chest_boat",
+    "name": "Spruce Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:birch_boat",
+    "name": "Birch Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:birch_chest_boat",
+    "name": "Birch Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:jungle_boat",
+    "name": "Jungle Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:jungle_chest_boat",
+    "name": "Jungle Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:acacia_boat",
+    "name": "Acacia Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:acacia_chest_boat",
+    "name": "Acacia Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:cherry_boat",
+    "name": "Cherry Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:cherry_chest_boat",
+    "name": "Cherry Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:dark_oak_boat",
+    "name": "Dark Oak Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:dark_oak_chest_boat",
+    "name": "Dark Oak Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:pale_oak_boat",
+    "name": "Pale Oak Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:pale_oak_chest_boat",
+    "name": "Pale Oak Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:mangrove_boat",
+    "name": "Mangrove Boat",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:mangrove_chest_boat",
+    "name": "Mangrove Boat with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:bamboo_raft",
+    "name": "Bamboo Raft",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:bamboo_chest_raft",
+    "name": "Bamboo Raft with Chest",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:turtle_helmet",
+    "name": "Turtle Shell",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:wolf_armor",
+    "name": "Wolf Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:flint_and_steel",
+    "name": "Flint and Steel",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:bow",
+    "name": "Bow",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:wooden_sword",
+    "name": "Wooden Sword",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:wooden_shovel",
+    "name": "Wooden Shovel",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:wooden_pickaxe",
+    "name": "Wooden Pickaxe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:wooden_axe",
+    "name": "Wooden Axe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:wooden_hoe",
+    "name": "Wooden Hoe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_sword",
+    "name": "Copper Sword",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_shovel",
+    "name": "Copper Shovel",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_pickaxe",
+    "name": "Copper Pickaxe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_axe",
+    "name": "Copper Axe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_hoe",
+    "name": "Copper Hoe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:stone_sword",
+    "name": "Stone Sword",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:stone_shovel",
+    "name": "Stone Shovel",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:stone_pickaxe",
+    "name": "Stone Pickaxe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:stone_axe",
+    "name": "Stone Axe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:stone_hoe",
+    "name": "Stone Hoe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_sword",
+    "name": "Golden Sword",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_shovel",
+    "name": "Golden Shovel",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_pickaxe",
+    "name": "Golden Pickaxe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_axe",
+    "name": "Golden Axe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_hoe",
+    "name": "Golden Hoe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_sword",
+    "name": "Iron Sword",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_shovel",
+    "name": "Iron Shovel",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_pickaxe",
+    "name": "Iron Pickaxe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_axe",
+    "name": "Iron Axe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_hoe",
+    "name": "Iron Hoe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_sword",
+    "name": "Diamond Sword",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_shovel",
+    "name": "Diamond Shovel",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_pickaxe",
+    "name": "Diamond Pickaxe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_axe",
+    "name": "Diamond Axe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_hoe",
+    "name": "Diamond Hoe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_sword",
+    "name": "Netherite Sword",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_shovel",
+    "name": "Netherite Shovel",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_pickaxe",
+    "name": "Netherite Pickaxe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_axe",
+    "name": "Netherite Axe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_hoe",
+    "name": "Netherite Hoe",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:mushroom_stew",
+    "name": "Mushroom Stew",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:leather_helmet",
+    "name": "Leather Cap",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:leather_chestplate",
+    "name": "Leather Tunic",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:leather_leggings",
+    "name": "Leather Pants",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:leather_boots",
+    "name": "Leather Boots",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_helmet",
+    "name": "Copper Helmet",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_chestplate",
+    "name": "Copper Chestplate",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_leggings",
+    "name": "Copper Leggings",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_boots",
+    "name": "Copper Boots",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:chainmail_helmet",
+    "name": "Chainmail Helmet",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:chainmail_chestplate",
+    "name": "Chainmail Chestplate",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:chainmail_leggings",
+    "name": "Chainmail Leggings",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:chainmail_boots",
+    "name": "Chainmail Boots",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_helmet",
+    "name": "Iron Helmet",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_chestplate",
+    "name": "Iron Chestplate",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_leggings",
+    "name": "Iron Leggings",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_boots",
+    "name": "Iron Boots",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_helmet",
+    "name": "Diamond Helmet",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_chestplate",
+    "name": "Diamond Chestplate",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_leggings",
+    "name": "Diamond Leggings",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_boots",
+    "name": "Diamond Boots",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_helmet",
+    "name": "Golden Helmet",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_chestplate",
+    "name": "Golden Chestplate",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_leggings",
+    "name": "Golden Leggings",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_boots",
+    "name": "Golden Boots",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_helmet",
+    "name": "Netherite Helmet",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_chestplate",
+    "name": "Netherite Chestplate",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_leggings",
+    "name": "Netherite Leggings",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_boots",
+    "name": "Netherite Boots",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:oak_sign",
+    "name": "Oak Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:spruce_sign",
+    "name": "Spruce Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:birch_sign",
+    "name": "Birch Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:jungle_sign",
+    "name": "Jungle Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:acacia_sign",
+    "name": "Acacia Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:cherry_sign",
+    "name": "Cherry Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:dark_oak_sign",
+    "name": "Dark Oak Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:pale_oak_sign",
+    "name": "Pale Oak Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:mangrove_sign",
+    "name": "Mangrove Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:bamboo_sign",
+    "name": "Bamboo Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:crimson_sign",
+    "name": "Crimson Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:warped_sign",
+    "name": "Warped Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:oak_hanging_sign",
+    "name": "Oak Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:spruce_hanging_sign",
+    "name": "Spruce Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:birch_hanging_sign",
+    "name": "Birch Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:jungle_hanging_sign",
+    "name": "Jungle Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:acacia_hanging_sign",
+    "name": "Acacia Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:cherry_hanging_sign",
+    "name": "Cherry Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:dark_oak_hanging_sign",
+    "name": "Dark Oak Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:pale_oak_hanging_sign",
+    "name": "Pale Oak Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:mangrove_hanging_sign",
+    "name": "Mangrove Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:bamboo_hanging_sign",
+    "name": "Bamboo Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:crimson_hanging_sign",
+    "name": "Crimson Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:warped_hanging_sign",
+    "name": "Warped Hanging Sign",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:bucket",
+    "name": "Bucket",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:water_bucket",
+    "name": "Water Bucket",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:lava_bucket",
+    "name": "Lava Bucket",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:powder_snow_bucket",
+    "name": "Powder Snow Bucket",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:snowball",
+    "name": "Snowball",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:milk_bucket",
+    "name": "Milk Bucket",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:pufferfish_bucket",
+    "name": "Bucket of Pufferfish",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:salmon_bucket",
+    "name": "Bucket of Salmon",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:cod_bucket",
+    "name": "Bucket of Cod",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:tropical_fish_bucket",
+    "name": "Bucket of Tropical Fish",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:axolotl_bucket",
+    "name": "Bucket of Axolotl",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:tadpole_bucket",
+    "name": "Bucket of Tadpole",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:egg",
+    "name": "Egg",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:blue_egg",
+    "name": "Blue Egg",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:brown_egg",
+    "name": "Brown Egg",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:bundle",
+    "name": "Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:white_bundle",
+    "name": "White Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:orange_bundle",
+    "name": "Orange Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:magenta_bundle",
+    "name": "Magenta Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:light_blue_bundle",
+    "name": "Light Blue Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:yellow_bundle",
+    "name": "Yellow Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:lime_bundle",
+    "name": "Lime Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:pink_bundle",
+    "name": "Pink Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:gray_bundle",
+    "name": "Gray Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:light_gray_bundle",
+    "name": "Light Gray Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:cyan_bundle",
+    "name": "Cyan Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:purple_bundle",
+    "name": "Purple Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:blue_bundle",
+    "name": "Blue Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:brown_bundle",
+    "name": "Brown Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:green_bundle",
+    "name": "Green Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:red_bundle",
+    "name": "Red Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:black_bundle",
+    "name": "Black Bundle",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:fishing_rod",
+    "name": "Fishing Rod",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:spyglass",
+    "name": "Spyglass",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:cake",
+    "name": "Cake",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:white_bed",
+    "name": "White Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:orange_bed",
+    "name": "Orange Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:magenta_bed",
+    "name": "Magenta Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:light_blue_bed",
+    "name": "Light Blue Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:yellow_bed",
+    "name": "Yellow Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:lime_bed",
+    "name": "Lime Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:pink_bed",
+    "name": "Pink Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:gray_bed",
+    "name": "Gray Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:light_gray_bed",
+    "name": "Light Gray Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:cyan_bed",
+    "name": "Cyan Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:purple_bed",
+    "name": "Purple Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:blue_bed",
+    "name": "Blue Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:brown_bed",
+    "name": "Brown Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:green_bed",
+    "name": "Green Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:red_bed",
+    "name": "Red Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:black_bed",
+    "name": "Black Bed",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:shears",
+    "name": "Shears",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:ender_pearl",
+    "name": "Ender Pearl",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:potion",
+    "name": "Potion",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:writable_book",
+    "name": "Book and Quill",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:written_book",
+    "name": "Written Book",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:mace",
+    "name": "Mace",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:enchanted_book",
+    "name": "Enchanted Book",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:rabbit_stew",
+    "name": "Rabbit Stew",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:armor_stand",
+    "name": "Armor Stand",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:copper_horse_armor",
+    "name": "Copper Horse Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_horse_armor",
+    "name": "Iron Horse Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_horse_armor",
+    "name": "Golden Horse Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_horse_armor",
+    "name": "Diamond Horse Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_horse_armor",
+    "name": "Netherite Horse Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:leather_horse_armor",
+    "name": "Leather Horse Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:command_block_minecart",
+    "name": "Minecart with Command Block",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:white_banner",
+    "name": "White Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:orange_banner",
+    "name": "Orange Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:magenta_banner",
+    "name": "Magenta Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:light_blue_banner",
+    "name": "Light Blue Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:yellow_banner",
+    "name": "Yellow Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:lime_banner",
+    "name": "Lime Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:pink_banner",
+    "name": "Pink Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:gray_banner",
+    "name": "Gray Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:light_gray_banner",
+    "name": "Light Gray Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:cyan_banner",
+    "name": "Cyan Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:purple_banner",
+    "name": "Purple Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:blue_banner",
+    "name": "Blue Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:brown_banner",
+    "name": "Brown Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:green_banner",
+    "name": "Green Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:red_banner",
+    "name": "Red Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:black_banner",
+    "name": "Black Banner",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:beetroot_soup",
+    "name": "Beetroot Soup",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:splash_potion",
+    "name": "Splash Potion",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:lingering_potion",
+    "name": "Lingering Potion",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:shield",
+    "name": "Shield",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:wooden_spear",
+    "name": "Wooden Spear",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:stone_spear",
+    "name": "Stone Spear",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_spear",
+    "name": "Copper Spear",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_spear",
+    "name": "Iron Spear",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_spear",
+    "name": "Golden Spear",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_spear",
+    "name": "Diamond Spear",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_spear",
+    "name": "Netherite Spear",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:totem_of_undying",
+    "name": "Totem of Undying",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:knowledge_book",
+    "name": "Knowledge Book",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:debug_stick",
+    "name": "Debug Stick",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_13",
+    "name": "Music Disc \u00a7f(\ueff51)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_cat",
+    "name": "Music Disc \u00a7f(\ueff52)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_blocks",
+    "name": "Music Disc \u00a7f(\ueff53)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_chirp",
+    "name": "Music Disc \u00a7f(\ueff54)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_creator",
+    "name": "Music Disc \u00a7f(\ueff512)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_creator_music_box",
+    "name": "Music Disc \u00a7f(\ueff511)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_far",
+    "name": "Music Disc \u00a7f(\ueff55)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_lava_chicken",
+    "name": "Music Disc \u00a7f(\ueff59)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_mall",
+    "name": "Music Disc \u00a7f(\ueff56)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_mellohi",
+    "name": "Music Disc \u00a7f(\ueff57)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_stal",
+    "name": "Music Disc \u00a7f(\ueff58)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_strad",
+    "name": "Music Disc \u00a7f(\ueff59)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_ward",
+    "name": "Music Disc \u00a7f(\ueff510)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_11",
+    "name": "Music Disc \u00a7f(\ueff511)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_wait",
+    "name": "Music Disc \u00a7f(\ueff512)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_otherside",
+    "name": "Music Disc \u00a7f(\ueff514)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_relic",
+    "name": "Music Disc \u00a7f(\ueff514)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_5",
+    "name": "Music Disc \u00a7f(\ueff515)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_pigstep",
+    "name": "Music Disc \u00a7f(\ueff513)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_precipice",
+    "name": "Music Disc \u00a7f(\ueff513)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:music_disc_tears",
+    "name": "Music Disc \u00a7f(\ueff510)",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:trident",
+    "name": "Trident",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:iron_nautilus_armor",
+    "name": "Iron Nautilus Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:golden_nautilus_armor",
+    "name": "Golden Nautilus Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:diamond_nautilus_armor",
+    "name": "Diamond Nautilus Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:netherite_nautilus_armor",
+    "name": "Netherite Nautilus Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:copper_nautilus_armor",
+    "name": "Copper Nautilus Armor",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:crossbow",
+    "name": "Crossbow",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:suspicious_stew",
+    "name": "Suspicious Stew",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:flower_banner_pattern",
+    "name": "Flower Charge Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:creeper_banner_pattern",
+    "name": "Creeper Charge Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:skull_banner_pattern",
+    "name": "Skull Charge Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:mojang_banner_pattern",
+    "name": "Thing Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:globe_banner_pattern",
+    "name": "Globe Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:piglin_banner_pattern",
+    "name": "Snout Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:flow_banner_pattern",
+    "name": "Flow Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:guster_banner_pattern",
+    "name": "Guster Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:field_masoned_banner_pattern",
+    "name": "Field Masoned Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:bordure_indented_banner_pattern",
+    "name": "Bordure Indented Banner Pattern",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:goat_horn",
+    "name": "Goat Horn",
+    "stackSize": 1
+  },
+  {
+    "id": "minecraft:honey_bottle",
+    "name": "Honey Bottle",
+    "stackSize": 16
+  },
+  {
+    "id": "minecraft:brush",
+    "name": "Brush",
+    "stackSize": 1
+  }
+]

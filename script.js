@@ -118,6 +118,246 @@
   const jsonBlock = $('#jsonBlock');
   const jsonPreview = $('#jsonPreview');
 
+  let stackSizes = {};
+
+  async function cacheStackSizes() {
+      const response = await fetch('./assets/stack_sizes.json');
+      const items = await response.json();
+
+      stackSizes = Object.fromEntries(
+          items.map(item => [item.name, item.stackSize])
+      );
+  }
+
+  (async () => {
+    await cacheStackSizes();
+
+    const settings = await loadSettings();
+    applySettings(settings);
+    
+    try {
+      const saved = await loadLastFile();
+
+      if (!saved) return;
+    
+      filenameEl.textContent = saved.filename;
+      state.rows = parseCSV(saved.content);
+      totalItemsEl.textContent = state.rows.length;
+      renderAll();
+    } catch (err) {
+      console.error('Failed to restore saved CSV', err);
+    }
+  })();
+
+  async function sha256(text) {
+    const data = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+
+    return [...new Uint8Array(hash)]
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open('csv-app', 2);
+
+      req.onupgradeneeded = () => {
+        const db = req.result;
+
+        if (!db.objectStoreNames.contains('files')) {
+          db.createObjectStore('files', { keyPath: 'hash' });
+        }
+
+        if (!db.objectStoreNames.contains('meta')) {
+          db.createObjectStore('meta');
+        }
+
+        if (!db.objectStoreNames.contains('settings')) {
+          db.createObjectStore('settings');
+        }
+      };
+
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function saveFile(filename, content) {
+    const db = await openDB();
+    const hash = await sha256(content);
+
+    const tx = db.transaction(['files', 'meta'], 'readwrite');
+
+    const files = tx.objectStore('files');
+    const meta = tx.objectStore('meta');
+
+    const existing = await new Promise(resolve => {
+      const req = files.get(hash);
+      req.onsuccess = () => resolve(req.result);
+    });
+
+    if (!existing) {
+      files.put({
+        hash,
+        filename,
+        content,
+        uploadedAt: Date.now()
+      });
+    }
+
+    meta.put(hash, 'lastOpened');
+
+    return hash;
+  }
+
+  async function loadLastFile() {
+    const db = await openDB();
+
+    const tx = db.transaction(['files', 'meta'], 'readonly');
+
+    const meta = tx.objectStore('meta');
+    const files = tx.objectStore('files');
+
+    const hash = await new Promise((resolve, reject) => {
+      const req = meta.get('lastOpened');
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+
+    if (!hash) return null;
+
+    return await new Promise((resolve, reject) => {
+      const req = files.get(hash);
+      req.onsuccess = () => {
+        if (!req.result) {
+          console.warn(`Missing file for hash ${hash}`);
+
+          const tx2 = db.transaction('meta', 'readwrite');
+          tx2.objectStore('meta').delete('lastOpened');
+
+          resolve(null);
+          return;
+        }
+
+        resolve(req.result);
+      };
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function getSettings() {
+    return {
+      author: authorEl.value,
+
+      enableHeader: enableHeaderEl.checked,
+      headerText: headerTextEl.value,
+
+      enableFooter: enableFooterEl.checked,
+      footerText: footerTextEl.value,
+
+      includeSummary: includeSummaryEl.checked,
+      showListHeader: showListHeaderEl.checked,
+      repeatListHeader: repeatListHeaderEl.checked,
+
+      enableChecklist: enableChecklistEl.checked,
+      checklistStyle: checklistStyleEl.value,
+
+      itemFormat: itemFormatEl.value,
+
+      showStack: showStackEl.checked,
+      showShulker: showShulkerEl.checked,
+      shulkerThreshold: shulkerThresholdEl.value,
+
+      pageWidth: pageWidthEl.value,
+      linesPerPage: linesPerPageEl.value,
+
+      previewMode: previewModeEl.value
+    };
+  }
+
+  function applySettings(settings) {
+    if (!settings) return;
+
+    authorEl.value = settings.author ?? 'D3v1s0m';
+
+    enableHeaderEl.checked = settings.enableHeader ?? false;
+    headerTextEl.disabled = !settings.enableHeader ?? true;
+    headerTextEl.value = settings.headerText ?? '';
+
+    enableFooterEl.checked = settings.enableFooter ?? false;
+    footerTextEl.disabled = !settings.enableFooter ?? true;
+    footerTextEl.value = settings.footerText ?? '';
+
+    includeSummaryEl.checked = settings.includeSummary ?? true;
+    showListHeaderEl.checked = settings.showListHeader ?? true;
+    repeatListHeaderEl.checked = settings.repeatListHeader ?? false;
+
+    enableChecklistEl.checked = settings.enableChecklist ?? false;
+    checklistStyleEl.value = settings.checklistStyle ?? 'unicode';
+
+    itemFormatEl.value = settings.itemFormat ?? '{check} {item}: {total}';
+
+    showStackEl.checked = settings.showStack ?? true;
+    showShulkerEl.disabled = !showStackEl.checked
+    showShulkerEl.checked = settings.showShulker ?? true;
+    shulkerThresholdEl.disabled = !(showStackEl.checked && showShulkerEl.checked)
+    shulkerThresholdEl.value = settings.shulkerThreshold ?? 27;
+
+    pageWidthEl.value = settings.pageWidth ?? 114;
+    linesPerPageEl.value = settings.linesPerPage ?? 14;
+
+    previewModeEl.value = settings.previewMode ?? 'book';
+  }
+
+  async function saveSettings() {
+    const db = await openDB();
+
+    const tx = db.transaction('settings', 'readwrite');
+
+    tx.objectStore('settings').put(
+      getSettings(),
+      'ui'
+    );
+  }
+
+  async function loadSettings() {
+    const db = await openDB();
+
+    return new Promise((resolve, reject) => {
+      const req = db
+        .transaction('settings', 'readonly')
+        .objectStore('settings')
+        .get('ui');
+
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  [
+    authorEl,
+    enableHeaderEl,
+    headerTextEl,
+    enableFooterEl,
+    footerTextEl,
+    includeSummaryEl,
+    showListHeaderEl,
+    repeatListHeaderEl,
+    enableChecklistEl,
+    checklistStyleEl,
+    itemFormatEl,
+    showStackEl,
+    showShulkerEl,
+    shulkerThresholdEl,
+    pageWidthEl,
+    linesPerPageEl,
+    previewModeEl
+  ].forEach(el => {
+    el.addEventListener('change', saveSettings);
+    el.addEventListener('input', saveSettings);
+  });
+
   // Wire up file input
   browseBtn.addEventListener('click', ()=>fileInput.click());
   fileInput.addEventListener('change',e=>{
@@ -131,9 +371,18 @@
   function handleFile(file){
     filenameEl.textContent = file.name;
     const reader = new FileReader();
-    reader.onload = ()=>{
-      try{ state.rows = parseCSV(reader.result); totalItemsEl.textContent = state.rows.length; renderAll(); }
-      catch(err){ alert('Invalid CSV: '+err.message) }
+    reader.onload = async () => {
+      try {
+        const text = reader.result;
+
+        await saveFile(file.name, text);
+
+        state.rows = parseCSV(text);
+        totalItemsEl.textContent = state.rows.length;
+        renderAll();
+      } catch(err) {
+        alert('Invalid CSV: ' + err.message);
+      }
     };
     reader.readAsText(file,'utf-8');
   }
@@ -141,6 +390,8 @@
   // Settings interactions
   enableHeaderEl.addEventListener('change',()=>headerTextEl.disabled = !enableHeaderEl.checked);
   enableFooterEl.addEventListener('change',()=>footerTextEl.disabled = !enableFooterEl.checked);
+  showStackEl.addEventListener('change',()=>{showShulkerEl.disabled = !showStackEl.checked; shulkerThresholdEl.disabled = !(showStackEl.checked && showShulkerEl.checked)});
+  showShulkerEl.addEventListener('change',()=>shulkerThresholdEl.disabled = !(showStackEl.checked && showShulkerEl.checked))
   [authorEl, enableHeaderEl, headerTextEl, enableFooterEl, footerTextEl, includeSummaryEl, showListHeaderEl, repeatListHeaderEl, enableChecklistEl, checklistStyleEl, itemFormatEl, showStackEl, showShulkerEl, shulkerThresholdEl, pageWidthEl, linesPerPageEl, previewModeEl].forEach(el=>el.addEventListener('input', debounce(renderAll,200)));
 
   // Navigation
@@ -165,7 +416,7 @@
   // Main rendering
   function generateListHeader(fmt){
     if(!fmt) return '';
-    const checkSym = enableChecklistEl.checked ? (checklistStyleEl.value==='unicode' ? '☐/☑ ' : '[ ]/[x] ') : '';
+    const checkSym = enableChecklistEl.checked ? (checklistStyleEl.value==='unicode' ? '☐/☑' : '[ ]/[x]') : '';
     const map = {
       'item': 'Item',
       'total': 'Total',
@@ -239,7 +490,7 @@
         }
       }
 
-      const checkSym = enableChecklistEl.checked ? (checklistStyleEl.value==='unicode' ? '☐ ' : '[ ] ') : '';
+      const checkSym = enableChecklistEl.checked ? (checklistStyleEl.value==='unicode' ? '☐' : '[ ]') : '';
       const statusText = (available && Number(available)>0) ? 'Done' : 'Need';
       const fmt = itemFormatEl.value || (enableChecklistEl.checked?'{check}{item}: {total}':'{item}: {total}');
       const rendered = fmt.replace(/{item}/g,item).replace(/{total}/g,totalText).replace(/{missing}/g,missing).replace(/{available}/g,String(available)).replace(/{check}/g, checkSym).replace(/{status}/g,statusText);
@@ -286,23 +537,42 @@
       const missing = r['Missing'] || r['missing'] || '';
       const available = Number(r['Available'] || r['available'] || 0);
       let totalText = String(total);
-      if(showStackEl.checked){
-        const stacks = Math.floor(total/64);
-        const rem = total%64;
-        if(showShulkerEl.checked){
-          const threshold = Math.max(1, Number(shulkerThresholdEl.value)||27);
-          const shulkers = Math.floor(stacks/threshold);
-          const remStacks = stacks % threshold;
-          const parts = [];
-          if(shulkers>0) parts.push(shulkers + ' SB');
-          if(remStacks>0) parts.push(remStacks + 's');
-          if(rem>0) parts.push(rem);
-          if(parts.length) totalText = `${total} (${parts.join(' + ')})`;
-        } else {
-          totalText = `${total} (${stacks}s + ${rem})`;
-        }
+      const stackSize = stackSizes[item] ?? 64;
+
+      if (showStackEl.checked && total > stackSize) {
+          const stacks = Math.floor(total / stackSize);
+          const rem = total % stackSize;
+
+          if (showShulkerEl.checked) {
+              const threshold = Math.max(
+                  1,
+                  Number(shulkerThresholdEl.value) || 27
+              );
+
+              const shulkers = Math.floor(stacks / threshold);
+              const remStacks = stacks % threshold;
+
+              const parts = [];
+
+              if (shulkers > 0) parts.push(`${shulkers} SB`);
+              if (remStacks > 0) parts.push(`${remStacks}${stackSize > 1 ? 's' : ''}`);
+              if (rem > 0) parts.push(rem);
+
+              if (parts.length > 0) {
+                  totalText = `${total} (${parts.join(' + ')})`;
+              }
+          } else if (stackSize > 1) {
+              const parts = [];
+
+              if (stacks > 0) parts.push(`${stacks}${stackSize > 1 ? 's' : ''}`);
+              if (rem > 0) parts.push(rem);
+
+              if (parts.length > 0) {
+                  totalText = `${total} (${parts.join(' + ')})`;
+              }
+          }
       }
-      const checkSym = enableChecklistEl.checked ? (checklistStyleEl.value==='unicode' ? '☐ ' : '[ ] ') : '';
+      const checkSym = enableChecklistEl.checked ? (checklistStyleEl.value==='unicode' ? '☐' : '[ ]') : '';
       const statusText = (available && Number(available)>0) ? 'Done' : 'Need';
       const fmt = itemFormatEl.value || (enableChecklistEl.checked?'{check}{item}: {total}':'{item}: {total}');
       const rendered = fmt.replace(/{item}/g,item).replace(/{total}/g,totalText).replace(/{missing}/g,missing).replace(/{available}/g,String(available)).replace(/{check}/g, checkSym).replace(/{status}/g,statusText);
@@ -574,7 +844,7 @@
       bookTextLeft.style.left = leftOffset + 'px';
       bookTextLeft.style.top = topOffset + 'px';
       bookTextLeft.style.width = pageW + 'px';
-      bookTextLeft.style.height = pageH + 'px';
+      bookTextLeft.style.height = (pageH + 15) + 'px';
       // compute font size so 14 lines fit into pageH (account for vertical padding)
       const paddingPx = 6; // matches .book-text padding
       const usableH = pageH - paddingPx * 2;
@@ -584,7 +854,7 @@
       bookTextRight.style.left = rightOffset + 'px';
       bookTextRight.style.top = topOffset + 'px';
       bookTextRight.style.width = pageW + 'px';
-      bookTextRight.style.height = pageH + 'px';
+      bookTextRight.style.height = (pageH + 15) + 'px';
       bookTextRight.style.fontSize = fontSizePx + 'px';
       bookTextRight.style.lineHeight = '1';
       // ensure text cannot overflow visually below page area
@@ -605,7 +875,8 @@
       const out = parts.flatMap(p=>{
         // preserve explicit empty lines
         if(p === '') return [''];
-        return wrapMinecraftLine(p);
+        // return wrapMinecraftLine(p);
+        return p;
       });
       return out.join('\n');
     }

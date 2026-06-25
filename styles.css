@@ -21,9 +21,9 @@ label{font-size:14px}
 .book-canvas{display:flex;justify-content:center}
 .blit{position:relative;overflow:hidden;display:block}
 #bookCanvas{position:absolute;left:0;top:0;display:block}
-.book-text{position:absolute;white-space:pre-wrap;font-family: 'Minecraftia', monospace, ui-monospace;line-height:1.1;font-size:12px;color:#0b1311;background:transparent;padding:0;margin:0;overflow:hidden}
-.book-text.left{left:36px;top:30px;width:114px;height:128px;padding:6px}
-.book-text.right{left:162px;top:30px;width:114px;height:128px;padding:6px}
+.book-text{position:absolute;white-space:pre-wrap;font-family: 'Minecraftia', monospace, ui-monospace;line-height:1.1;font-size:8px;color:#0b1311;background:transparent;padding:0;margin:0;overflow:hidden}
+.book-text.left{left:36px;top:30px;width:114px;height:128px;padding:0 6px}
+.book-text.right{left:162px;top:30px;width:114px;height:128px;padding:0 6px}
 .page-labels{display:flex;justify-content:center;gap:220px;margin-top:6px;color:var(--muted);font-size:13px}
 .preview-stats{display:flex;gap:18px;margin-top:8px;color:var(--muted)}
 .card input, .card select, .card button { font-family: inherit }
@@ -50,7 +50,7 @@ select { appearance:none; -webkit-appearance:none; background-image:linear-gradi
 /* optional Minecraft font if bundled in assets/ */
 @font-face{
   font-family: 'Minecraftia';
-  src: url('assets/minecraftia.ttf') format('truetype');
+  src: url('./assets/minecraftia-webfont.woff') format('woff');
   font-display:swap;
 }
 .preview-controls{display:flex;justify-content:space-between;align-items:center}
@@ -60,9 +60,9 @@ button{background:#0b2320;border:1px solid rgba(255,255,255,0.04);color:var(--te
 .book-wrap{position:relative;margin-top:12px}
 .book-canvas{display:flex;justify-content:center}
 .blit{position:relative;overflow:hidden;display:block}
-.book-text{position:absolute;white-space:pre-wrap;font-family: 'Minecraftia', monospace, ui-monospace;line-height:1.1;font-size:12px;color:#0b1311;background:transparent;padding:0;margin:0}
-.book-text.left{left:36px;top:30px;width:114px;height:128px;padding:6px}
-.book-text.right{left:162px;top:30px;width:114px;height:128px;padding:6px}
+.book-text{position:absolute;white-space:pre-wrap;font-family: 'Minecraftia', monospace, ui-monospace;line-height:1.1;font-size:8px;color:#0b1311;background:transparent;padding:0;margin:0}
+.book-text.left{left:36px;top:30px;width:114px;height:128px;padding:0 6px}
+.book-text.right{left:162px;top:30px;width:114px;height:128px;padding:0 6px}
 .page-labels{display:flex;justify-content:center;gap:220px;margin-top:6px;color:var(--muted);font-size:13px}
 .preview-stats{display:flex;gap:18px;margin-top:8px;color:var(--muted)}
 
