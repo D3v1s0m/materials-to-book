@@ -391,7 +391,7 @@
   enableHeaderEl.addEventListener('change',()=>headerTextEl.disabled = !enableHeaderEl.checked);
   enableFooterEl.addEventListener('change',()=>footerTextEl.disabled = !enableFooterEl.checked);
   showStackEl.addEventListener('change',()=>{showShulkerEl.disabled = !showStackEl.checked; shulkerThresholdEl.disabled = !(showStackEl.checked && showShulkerEl.checked)});
-  showShulkerEl.addEventListener('change',()=>shulkerThresholdEl.disabled = !(showStackEl.checked && showShulkerEl.checked))
+  showShulkerEl.addEventListener('change',()=>shulkerThresholdEl.disabled = !(showStackEl.checked && showShulkerEl.checked));
   [authorEl, enableHeaderEl, headerTextEl, enableFooterEl, footerTextEl, includeSummaryEl, showListHeaderEl, repeatListHeaderEl, enableChecklistEl, checklistStyleEl, itemFormatEl, showStackEl, showShulkerEl, shulkerThresholdEl, pageWidthEl, linesPerPageEl, previewModeEl].forEach(el=>el.addEventListener('input', debounce(renderAll,200)));
 
   // Navigation
