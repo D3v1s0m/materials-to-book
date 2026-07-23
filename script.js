@@ -31,44 +31,30 @@
     return result;
   }
 
-  // Simple CSV parser for the expected format
-  function parseCSV(text){
-    const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n').filter(Boolean);
-    if(lines.length===0) return [];
-    const header = parseCSVLine(lines[0]);
-    const out = [];
-    for(let i=1;i<lines.length;i++){
-      const row = parseCSVLine(lines[i]);
-      if(row.length===0) continue;
-      const obj = {};
-      for(let j=0;j<header.length;j++) obj[header[j]] = row[j]===undefined?'':row[j];
-      out.push(obj);
-    }
-    return out;
-  }
+  function applyEdits(rows, edits) {
+      const out = rows.filter((_, i) => !edits.ignored.original.includes(i));
 
-  function parseCSVLine(line){
-    const res = []; let cur=''; let inQuotes=false;
-    for(let i=0;i<line.length;i++){
-      const ch = line[i];
-      if(inQuotes){
-        if(ch==='"'){
-          if(line[i+1]==='"'){ cur += '"'; i++; } else { inQuotes=false }
-        } else cur += ch;
-      } else {
-        if(ch==='"'){ inQuotes=true }
-        else if(ch===','){ res.push(cur); cur=''}
-        else cur += ch;
-      }
-    }
-    res.push(cur);
-    return res.map(s=>s.trim());
+      const added = (edits.added || []).filter((_, i) => !edits.ignored.added.includes(i));
+
+      return [...out, ...added].sort((a, b) => {
+          const totalA = Number(a.Total || a.total || 0);
+          const totalB = Number(b.Total || b.total || 0);
+          const countDiff = totalB - totalA;
+
+          if (countDiff !== 0) {
+              return countDiff;
+          }
+
+          const nameA = String(a.Item || '').trim().toLowerCase();
+          const nameB = String(b.Item || '').trim().toLowerCase();
+          return nameA.localeCompare(nameB);
+      });
   }
 
   // DOM helpers
   const $ = sel => document.querySelector(sel);
   const state = {
-    rows: [], pages: [], currentPage: 0
+    originalRows: [], rows: [], pages: [], currentPage: 0
   };
 
   // Elements
@@ -89,6 +75,8 @@
   const enableChecklistEl = $('#enableChecklist');
   const checklistStyleEl = $('#checklistStyle');
   const itemFormatEl = $('#itemFormat');
+  const baseValueModeEl = $('#baseValueMode');
+  const considerAvailableEl = $('#considerAvailable');
   const showStackEl = $('#showStack');
   const showShulkerEl = $('#showShulker');
   const shulkerThresholdEl = $('#shulkerThreshold');
@@ -118,12 +106,77 @@
   const jsonBlock = $('#jsonBlock');
   const jsonPreview = $('#jsonPreview');
 
+  const editorModal = $('#editorModal');
+  const editorSearch = $('#editorSearch');
+  const editorItemList = $('#editorItemList');
+  const editorAddedSection = $('#editorAddedSection');
+  const editorAddedList = $('#editorAddedList');
+  const closeEditorBtn = $('#closeEditorBtn');
+  const editorStatus = $('#editorStatus');
+  const deleteCacheBtn = $('#deleteCacheBtn');
+  const addItemBtn = $('#addItemBtn');
+  const addItemPopup = $('#addItemPopup');
+  const addItemName = $('#addItemName');
+  const addItemTitle = $('#addItemTitle');
+  const addItemTotal = $('#addItemTotal');
+  const addItemShulkers = $('#addItemShulkers');
+  const addItemStacks = $('#addItemStacks');
+  const addItemItems = $('#addItemItems');
+  const addItemAmountFields = [addItemTotal, addItemShulkers, addItemStacks, addItemItems];
+  const addItemIcon = $('#addItemIcon');
+  const addItemIconPlaceholder = $('#addItemIconPlaceholder');
+  const addItemSuggestions = $('#addItemSuggestions');
+  const addItemAmountHint = $('#addItemAmountHint');
+  const confirmAddItemBtn = $('#confirmAddItemBtn');
+  const cancelAddItemBtn = $('#cancelAddItemBtn');
+
   let stackSizes = {};
+  let itemCatalog = [];
+  let selectedAddItem = null;
+  let editingAddedIndex = null;
+
+  function sanitizeSpriteName(name) {
+      return String(name || '').trim().replace(/[\\/:*?"<>|]/g, '');
+  }
+
+  function getItemIconUrl(itemName) {
+      const entry = itemCatalog.find(item => String(item.name || '').toLowerCase() === String(itemName || '').trim().toLowerCase());
+
+      if (!entry || !entry.id) {
+          return '';
+      }
+
+      const id = entry.id.replace("minecraft:", "");
+
+      const safeName = encodeURIComponent(sanitizeSpriteName(itemName || entry.name || ''));
+      return `https://ofekn-mods.github.io/sprites/items/${id}-${safeName}.png`;
+  }
+
+  function getItemDisplayMarkup(itemName) {
+      const iconUrl = getItemIconUrl(itemName);
+      return `
+        <span class="item-inline">
+          ${iconUrl ? `<img class="editor-item-icon" src="${iconUrl}" alt="${itemName}" onerror="this.style.display='none'">` : ''}
+          <span>${itemName || ''}</span>
+        </span>
+      `;
+  }
+
+  function getSuggestionMarkup(itemName) {
+      const iconUrl = getItemIconUrl(itemName);
+      return `
+        <span class="item-inline">
+          ${iconUrl ? `<img class="editor-item-icon" src="${iconUrl}" alt="${itemName}" onerror="this.style.display='none'">` : ''}
+          <span>${itemName || ''}</span>
+        </span>
+      `;
+  }
 
   async function cacheStackSizes() {
       const response = await fetch('./assets/stack_sizes.json');
       const items = await response.json();
 
+      itemCatalog = Array.isArray(items) ? items : [];
       stackSizes = Object.fromEntries(
           items.map(item => [item.name, item.stackSize])
       );
@@ -138,113 +191,26 @@
     try {
       const saved = await loadLastFile();
 
-      if (!saved) return;
+      if (!saved) {
+        editBtn.disabled = true;
+        nextPageBtn.disabled = true;
+        prevPageBtn.disabled = true;
+        return;
+      }
+
+      editBtn.disabled = false;
+      nextPageBtn.disabled = false;
+      prevPageBtn.disabled = false;
     
       filenameEl.textContent = saved.filename;
-      state.rows = parseCSV(saved.content);
+      state.originalRows = parseCSV(saved.content);
+      state.rows = applyEdits(state.originalRows, saved.edits);
       totalItemsEl.textContent = state.rows.length;
       renderAll();
     } catch (err) {
       console.error('Failed to restore saved CSV', err);
     }
   })();
-
-  async function sha256(text) {
-    const data = new TextEncoder().encode(text);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-
-    return [...new Uint8Array(hash)]
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-  }
-
-  function openDB() {
-    return new Promise((resolve, reject) => {
-      const req = indexedDB.open('csv-app', 2);
-
-      req.onupgradeneeded = () => {
-        const db = req.result;
-
-        if (!db.objectStoreNames.contains('files')) {
-          db.createObjectStore('files', { keyPath: 'hash' });
-        }
-
-        if (!db.objectStoreNames.contains('meta')) {
-          db.createObjectStore('meta');
-        }
-
-        if (!db.objectStoreNames.contains('settings')) {
-          db.createObjectStore('settings');
-        }
-      };
-
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  async function saveFile(filename, content) {
-    const db = await openDB();
-    const hash = await sha256(content);
-
-    const tx = db.transaction(['files', 'meta'], 'readwrite');
-
-    const files = tx.objectStore('files');
-    const meta = tx.objectStore('meta');
-
-    const existing = await new Promise(resolve => {
-      const req = files.get(hash);
-      req.onsuccess = () => resolve(req.result);
-    });
-
-    if (!existing) {
-      files.put({
-        hash,
-        filename,
-        content,
-        uploadedAt: Date.now()
-      });
-    }
-
-    meta.put(hash, 'lastOpened');
-
-    return hash;
-  }
-
-  async function loadLastFile() {
-    const db = await openDB();
-
-    const tx = db.transaction(['files', 'meta'], 'readonly');
-
-    const meta = tx.objectStore('meta');
-    const files = tx.objectStore('files');
-
-    const hash = await new Promise((resolve, reject) => {
-      const req = meta.get('lastOpened');
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
-    });
-
-    if (!hash) return null;
-
-    return await new Promise((resolve, reject) => {
-      const req = files.get(hash);
-      req.onsuccess = () => {
-        if (!req.result) {
-          console.warn(`Missing file for hash ${hash}`);
-
-          const tx2 = db.transaction('meta', 'readwrite');
-          tx2.objectStore('meta').delete('lastOpened');
-
-          resolve(null);
-          return;
-        }
-
-        resolve(req.result);
-      };
-      req.onerror = () => reject(req.error);
-    });
-  }
 
   function getSettings() {
     return {
@@ -264,6 +230,9 @@
       checklistStyle: checklistStyleEl.value,
 
       itemFormat: itemFormatEl.value,
+
+      baseValueMode: baseValueModeEl.value,
+      considerAvailable: considerAvailableEl.checked,
 
       showStack: showStackEl.checked,
       showShulker: showShulkerEl.checked,
@@ -297,6 +266,9 @@
     checklistStyleEl.value = settings.checklistStyle ?? 'unicode';
 
     itemFormatEl.value = settings.itemFormat ?? '{check} {item}: {total}';
+
+    baseValueModeEl.value = settings.baseValueMode ?? 'total';
+    considerAvailableEl.checked = settings.considerAvailable ?? false;
 
     showStackEl.checked = settings.showStack ?? true;
     showShulkerEl.disabled = !showStackEl.checked
@@ -347,6 +319,8 @@
     enableChecklistEl,
     checklistStyleEl,
     itemFormatEl,
+    baseValueModeEl,
+    considerAvailableEl,
     showStackEl,
     showShulkerEl,
     shulkerThresholdEl,
@@ -364,9 +338,11 @@
     const f = e.target.files[0]; if(!f) return; handleFile(f);
   });
 
-  dropzone.addEventListener('dragover',e=>{e.preventDefault(); dropzone.classList.add('hover')});
-  dropzone.addEventListener('dragleave',e=>{dropzone.classList.remove('hover')});
-  dropzone.addEventListener('drop',e=>{e.preventDefault(); dropzone.classList.remove('hover'); const f = e.dataTransfer.files[0]; if(f) handleFile(f);});
+  let dragCounter = 0;
+  dropzone.addEventListener("dragenter",e=>{e.preventDefault();dragCounter++;dropzone.classList.add("hover");});
+  dropzone.addEventListener("dragover",e=>e.preventDefault());
+  dropzone.addEventListener("dragleave",e=>{e.preventDefault();if(--dragCounter<=0){dragCounter=0;dropzone.classList.remove("hover");}});
+  dropzone.addEventListener("drop",e=>{e.preventDefault();dragCounter=0;dropzone.classList.remove("hover");const f=e.dataTransfer.files[0];if(f)handleFile(f);});
 
   function handleFile(file){
     filenameEl.textContent = file.name;
@@ -377,7 +353,11 @@
 
         await saveFile(file.name, text);
 
-        state.rows = parseCSV(text);
+        state.originalRows = parseCSV(text);
+        state.rows = state.originalRows;
+        editBtn.disabled = false;
+        nextPageBtn.disabled = false;
+        prevPageBtn.disabled = false;
         totalItemsEl.textContent = state.rows.length;
         renderAll();
       } catch(err) {
@@ -387,12 +367,494 @@
     reader.readAsText(file,'utf-8');
   }
 
+  // Editor
+  editBtn.addEventListener("click", openEditor);
+
+  let editorFile = null;
+
+  async function openEditor() {
+    editorFile = await loadLastFile();
+
+    if (!editorFile)
+      return;
+
+    editorFile.edits = editorFile.edits || { ignored: { original: [], added: [] }, added: [] };
+    editorFile.edits.ignored = editorFile.edits.ignored || { original: [], added: [] };
+    editorFile.edits.added = editorFile.edits.added || [];
+    addItemBtn.disabled = false;
+    editorModal.hidden = false;
+    renderEditor();
+  }
+
+  editorSearch.addEventListener("input", renderEditor);
+
+  closeEditorBtn.addEventListener("click", () => {
+    editorModal.hidden = true;
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !editorModal.hidden)
+      editorModal.hidden = true;
+  });
+
+  editorModal.addEventListener("click", e => {
+      if (e.target === editorModal)
+        editorModal.hidden = true;
+  });
+
+  deleteCacheBtn.addEventListener("click", deleteCachedFile);
+
+  async function deleteCachedFile() {
+      if (!editorFile)
+        return;
+
+      if (!confirm(`Delete "${editorFile.filename}" from the cache?`))
+        return;
+
+      const db = await openDB();
+
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction(["files", "meta"], "readwrite");
+
+        editorFile.deletedAt = Date.now();
+
+        tx.objectStore("files").put(editorFile);
+        tx.objectStore("meta").delete("lastOpened");
+
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error);
+    });
+
+    editorModal.hidden = true;
+
+    editorFile = null;
+    state.rows = [];
+
+    filenameEl.textContent = "—";
+    totalItemsEl.textContent = "0";
+    generatedPagesEl.textContent = "0";
+
+    editBtn.disabled = true;
+
+    renderAll();
+  }
+
+  let editorRows = [];
+
+  function renderAddedItems(filter) {
+    const addedRows = Array.isArray(editorFile.edits.added) ? editorFile.edits.added : [];
+    editorAddedList.innerHTML = "";
+
+    if (addedRows.length === 0) {
+      editorAddedSection.hidden = true;
+      return;
+    }
+
+    editorAddedSection.hidden = false;
+
+    addedRows.forEach((row, index) => {
+      if (filter && !String(row.Item || '').toLowerCase().includes(filter)) {
+        return;
+      }
+
+      const ignored = editorFile.edits.ignored.added.includes(index);
+
+      const div = document.createElement("div");
+      div.className = "editor-row added";
+
+      div.innerHTML = `
+        <input type="checkbox" ${ignored ? "checked" : ""}>
+        <span class="editor-item ${ignored ? "ignored" : ""}">${getItemDisplayMarkup(row.Item)}</span>
+        <span class="editor-total ${ignored ? "ignored" : ""}">${Number(row.Total || 0).toLocaleString()}</span>
+        <button type="button" class="editor-edit-btn">Edit</button>
+        <button type="button" class="editor-remove-btn">Remove</button>
+      `;
+
+      const checkbox = div.querySelector("input");
+      const item = div.querySelector(".editor-item");
+      const total = div.querySelector(".editor-total");
+      const editBtn = div.querySelector(".editor-edit-btn");
+      const removeBtn = div.querySelector(".editor-remove-btn");
+
+      checkbox.addEventListener("change", async e => {
+        const list = editorFile.edits.ignored.added;
+
+        if (e.target.checked) {
+          if (!list.includes(index)) {
+            list.push(index);
+            list.sort((a,b)=>a-b);
+          }
+        } else {
+          editorFile.edits.ignored.added = list.filter(v => v !== index);
+        }
+
+        item.classList.toggle("ignored", e.target.checked);
+        total.classList.toggle("ignored", e.target.checked);
+
+        await saveEditorFile();
+      });
+
+      editBtn.addEventListener("click", (e) => {
+        openAddItemPopup(e, index);
+      });
+
+      removeBtn.addEventListener("click", async () => {
+        editorFile.edits.added.splice(index, 1);
+        editorFile.edits.ignored.added = (editorFile.edits.ignored.added || [])
+          .filter(v => v !== index)
+          .map(v => (v > index ? v - 1 : v));
+
+        editorStatus.textContent = `Removed ${row.Item}`;
+        await saveEditorFile();
+        renderEditor();
+      });
+
+      editorAddedList.appendChild(div);
+    });
+  }
+
+  function renderEditor() {
+
+    editorRows = parseCSV(editorFile.content);
+    const filter = editorSearch.value.trim().toLowerCase();
+
+    editorItemList.innerHTML = "";
+
+    editorRows.forEach((row, index) => {
+
+      if (filter && !String(row.Item || '').toLowerCase().includes(filter))
+        return;
+
+      const ignored = editorFile.edits.ignored.original.includes(index);
+
+      const div = document.createElement("div");
+      div.className = "editor-row";
+
+      div.innerHTML = `
+        <input type="checkbox" ${ignored ? "checked" : ""}>
+        <span class="editor-item ${ignored ? "ignored" : ""}">${getItemDisplayMarkup(row.Item)}</span>
+        <span class="editor-total ${ignored ? "ignored" : ""}">${Number(row.Total).toLocaleString()}</span>
+      `;
+
+      const checkbox = div.querySelector("input");
+      const item = div.querySelector(".editor-item");
+      const total = div.querySelector(".editor-total");
+
+      checkbox.addEventListener("change", async e => {
+
+        const list = editorFile.edits.ignored.original;
+
+        if (e.target.checked) {
+          if (!list.includes(index)) {
+            list.push(index);
+            list.sort((a,b)=>a-b);
+          }
+        } else {
+          editorFile.edits.ignored.original = list.filter(v => v !== index);
+        }
+
+        item.classList.toggle("ignored", e.target.checked);
+        total.classList.toggle("ignored", e.target.checked);
+
+        await saveEditorFile();
+
+      });
+
+      editorItemList.appendChild(div);
+
+    });
+
+    renderAddedItems(filter);
+
+  }
+
+  async function saveEditorFile() {
+
+    const db = await openDB();
+
+    await new Promise((resolve, reject) => {
+
+      const tx = db.transaction("files", "readwrite");
+
+      tx.objectStore("files").put(editorFile);
+
+      tx.oncomplete = resolve;
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+
+    });
+
+    editorStatus.textContent = "Saved";
+
+    state.rows = applyEdits(
+      editorRows,
+      editorFile.edits
+    );
+
+    totalItemsEl.textContent = state.rows.length;
+
+    renderAll();
+
+  }
+
+  function getStackSize() {
+    return Number(selectedAddItem?.stackSize) || 64;
+  }
+
+  function getAmountBreakdown(total) {
+    const stackSize = getStackSize();
+    const totalValue = Math.max(0, Number(total) || 0);
+    const stacks = Math.floor(totalValue / stackSize);
+    const rem = totalValue % stackSize;
+    const threshold = 27;
+    const shulkers = Math.floor(stacks / threshold);
+    const remStacks = stacks % threshold;
+
+    return {
+      total: totalValue,
+      shulkers,
+      stacks: remStacks,
+      items: rem
+    };
+  }
+
+  function setAddItemAmountEnabled(enabled) {
+    addItemAmountFields.forEach(field => {
+      field.disabled = !enabled;
+    });
+  }
+
+  function syncAddItemIconVisibility(showRealIcon) {
+    addItemIcon.hidden = !showRealIcon;
+    if (addItemIconPlaceholder) {
+      addItemIconPlaceholder.hidden = showRealIcon;
+    }
+  }
+
+  function getAmountHintText() {
+    if (!selectedAddItem) {
+      return '';
+    }
+
+    const total = Math.max(0, Number.parseInt(addItemTotal.value || '0', 10) || 0);
+    const breakdown = getAmountBreakdown(total);
+    const parts = [];
+
+    if (breakdown.shulkers > 0) parts.push(`${breakdown.shulkers} SB`);
+    if (breakdown.stacks > 0) parts.push(`${breakdown.stacks} stacks`);
+    if (breakdown.items > 0) parts.push(`${breakdown.items} items`);
+
+    const shorthand = parts.length ? parts.join(' + ') : '0 items';
+    return `${total.toLocaleString()} items • ${shorthand}`;
+  }
+
+  function syncAddItemAmountFields(source = 'total') {
+    if (!selectedAddItem) {
+      return;
+    }
+
+    const stackSize = getStackSize();
+
+    if (source === 'total') {
+      const total = Math.max(0, Number.parseInt(addItemTotal.value || '0', 10) || 0);
+      const breakdown = getAmountBreakdown(total);
+      addItemShulkers.value = breakdown.shulkers;
+      addItemStacks.value = breakdown.stacks;
+      addItemItems.value = breakdown.items;
+    } else {
+      const shulkers = Math.max(0, Number.parseInt(addItemShulkers.value || '0', 10) || 0);
+      const stacks = Math.max(0, Number.parseInt(addItemStacks.value || '0', 10) || 0);
+      const items = Math.max(0, Number.parseInt(addItemItems.value || '0', 10) || 0);
+      const total = Math.max(0, (shulkers * 27 + stacks) * stackSize + items);
+      addItemTotal.value = total;
+    }
+
+    updateAmountHint();
+  }
+
+  function positionAddItemSuggestions() {
+    const rect = addItemName.getBoundingClientRect();
+    addItemSuggestions.style.position = 'fixed';
+    addItemSuggestions.style.left = `${rect.left}px`;
+    addItemSuggestions.style.top = `${rect.bottom + 6}px`;
+    addItemSuggestions.style.width = `${Math.max(320, rect.width)}px`;
+    addItemSuggestions.style.zIndex = '10001';
+  }
+
+  function updateAmountHint() {
+    addItemAmountHint.textContent = getAmountHintText();
+  }
+
+  function updateAddItemSuggestions() {
+    const term = String(addItemName.value || '').trim().toLowerCase();
+    addItemSuggestions.innerHTML = '';
+
+    if (!term) {
+      addItemSuggestions.hidden = true;
+      selectedAddItem = null;
+      // addItemIcon.hidden = true;
+      addItemIcon.removeAttribute('src');
+      updateAmountHint();
+      return;
+    }
+
+    const matches = itemCatalog
+      .filter(item => String(item.name || '').toLowerCase().includes(term))
+      .slice(0, 8);
+
+    if (!matches.length) {
+      addItemSuggestions.hidden = true;
+      updateAmountHint();
+      return;
+    }
+
+    matches.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'editor-add-suggestion';
+      btn.innerHTML = getSuggestionMarkup(item.name);
+      btn.addEventListener('mousedown', event => {
+        event.preventDefault();
+      });
+      btn.addEventListener('click', () => {
+        selectedAddItem = item;
+        addItemName.value = item.name;
+        addItemIcon.src = getItemIconUrl(item.name);
+        // addItemIcon.hidden = !addItemIcon.src;
+        addItemSuggestions.hidden = true;
+        // addItemTotal.value = '0';
+        // addItemShulkers.value = '0';
+        // addItemStacks.value = '0';
+        // addItemItems.value = '0';
+        syncAddItemAmountFields();
+        syncAddItemIconVisibility(true);
+        setAddItemAmountEnabled(true);
+        updateAmountHint();
+        addItemTotal.focus();
+        addItemTotal.select();
+      });
+      addItemSuggestions.appendChild(btn);
+    });
+
+    positionAddItemSuggestions();
+    addItemSuggestions.hidden = false;
+  }
+
+  function openAddItemPopup(e, editingIndex = null) {
+    const isEditing = editingIndex !== null;
+
+    editingAddedIndex = editingIndex;
+    selectedAddItem = null;
+    addItemName.value = '';
+    addItemTotal.value = '0';
+    addItemShulkers.value = '0';
+    addItemStacks.value = '0';
+    addItemItems.value = '0';
+    setAddItemAmountEnabled(false);
+    addItemIcon.removeAttribute('src');
+    syncAddItemIconVisibility(false);
+    addItemSuggestions.innerHTML = '';
+    addItemSuggestions.hidden = true;
+    addItemAmountHint.textContent = '';
+    confirmAddItemBtn.textContent = isEditing ? 'Save' : 'Add';
+    addItemTitle.textContent = isEditing ? 'Edit Item' : 'Add Item';
+
+    if (isEditing && Array.isArray(editorFile.edits.added)) {
+      const row = editorFile.edits.added[editingIndex];
+
+      if (row) {
+        selectedAddItem = itemCatalog.find(item => String(item.name || '').toLowerCase() === String(row.Item || '').trim().toLowerCase()) || null;
+        addItemName.value = row.Item || '';
+        addItemTotal.value = Number(row.Total || 0);
+        const breakdown = getAmountBreakdown(Number(row.Total || 0));
+        addItemShulkers.value = breakdown.shulkers;
+        addItemStacks.value = breakdown.stacks;
+        addItemItems.value = breakdown.items;
+        setAddItemAmountEnabled(true);
+        const iconUrl = getItemIconUrl(row.Item || '');
+        addItemIcon.src = iconUrl;
+        syncAddItemIconVisibility(Boolean(iconUrl));
+        updateAmountHint();
+      }
+    }
+
+    addItemPopup.hidden = false;
+    requestAnimationFrame(() => {
+      if (isEditing) {
+        addItemTotal.focus();
+        addItemTotal.select();
+      } else {
+        addItemName.focus();
+      }
+    });
+  }
+
+  function closeAddItemPopup() {
+    selectedAddItem = null;
+    editingAddedIndex = null;
+    setAddItemAmountEnabled(false);
+    confirmAddItemBtn.textContent = 'Add';
+    addItemTitle.textContent = 'Add Item';
+    addItemPopup.hidden = true;
+    addItemSuggestions.hidden = true;
+    addItemAmountHint.textContent = '';
+  }
+
+  addItemBtn.addEventListener("click", openAddItemPopup);
+  cancelAddItemBtn.addEventListener("click", closeAddItemPopup);
+  addItemName.addEventListener('input', updateAddItemSuggestions);
+  addItemName.addEventListener('focus', () => {
+    if (addItemName.value.trim()) {
+      updateAddItemSuggestions();
+    }
+    updateAmountHint();
+  });
+  addItemName.addEventListener('blur', () => {
+    window.setTimeout(() => {
+      addItemSuggestions.hidden = true;
+    }, 80);
+  });
+  addItemTotal.addEventListener('input', () => syncAddItemAmountFields('total'));
+  addItemShulkers.addEventListener('input', () => syncAddItemAmountFields('breakdown'));
+  addItemStacks.addEventListener('input', () => syncAddItemAmountFields('breakdown'));
+  addItemItems.addEventListener('input', () => syncAddItemAmountFields('breakdown'));
+  confirmAddItemBtn.addEventListener("click", async () => {
+    const itemName = String(addItemName.value || '').trim();
+    const total = Math.max(0, Number.parseInt(addItemTotal.value || '0', 10) || 0);
+
+    if (!itemName) {
+      editorStatus.textContent = 'Enter an item name';
+      return;
+    }
+
+    const entry = {
+      Item: itemName,
+      Total: Number.isFinite(total) ? total : 0,
+      Missing: '',
+      Available: ''
+    };
+
+    if (editingAddedIndex !== null && Array.isArray(editorFile.edits.added)) {
+      editorFile.edits.added[editingAddedIndex] = entry;
+      editorStatus.textContent = `Updated ${itemName}`;
+    } else {
+      editorFile.edits.added.push(entry);
+      editorStatus.textContent = `Added ${itemName}`;
+    }
+
+    editorFile.edits.ignored.added = editorFile.edits.ignored.added || [];
+    closeAddItemPopup();
+    await saveEditorFile();
+    renderEditor();
+  });
+
   // Settings interactions
   enableHeaderEl.addEventListener('change',()=>headerTextEl.disabled = !enableHeaderEl.checked);
   enableFooterEl.addEventListener('change',()=>footerTextEl.disabled = !enableFooterEl.checked);
   showStackEl.addEventListener('change',()=>{showShulkerEl.disabled = !showStackEl.checked; shulkerThresholdEl.disabled = !(showStackEl.checked && showShulkerEl.checked)});
   showShulkerEl.addEventListener('change',()=>shulkerThresholdEl.disabled = !(showStackEl.checked && showShulkerEl.checked));
-  [authorEl, enableHeaderEl, headerTextEl, enableFooterEl, footerTextEl, includeSummaryEl, showListHeaderEl, repeatListHeaderEl, enableChecklistEl, checklistStyleEl, itemFormatEl, showStackEl, showShulkerEl, shulkerThresholdEl, pageWidthEl, linesPerPageEl, previewModeEl].forEach(el=>el.addEventListener('input', debounce(renderAll,200)));
+  [authorEl, enableHeaderEl, headerTextEl, enableFooterEl, footerTextEl, includeSummaryEl, showListHeaderEl, repeatListHeaderEl, enableChecklistEl, checklistStyleEl, itemFormatEl, baseValueModeEl, considerAvailableEl, showStackEl, showShulkerEl, shulkerThresholdEl, pageWidthEl, linesPerPageEl, previewModeEl].forEach(el=>el.addEventListener('input', debounce(renderAll,200)));
 
   // Navigation
   prevPageBtn.addEventListener('click',()=>{
@@ -431,6 +893,50 @@
     });
   }
 
+  function parseNumericField(row, keys) {
+    for (const key of keys) {
+      const raw = row[key];
+      if (raw === undefined || raw === null || String(raw).trim() === '') {
+        continue;
+      }
+
+      const value = Number(String(raw).replace(/,/g, '').trim());
+      return Number.isFinite(value) ? value : 0;
+    }
+
+    return 0;
+  }
+
+  function formatCountText(value, item) {
+    let text = String(value);
+    const stackSize = stackSizes[item] ?? 64;
+
+    if (showStackEl.checked && value > stackSize) {
+      const stacks = Math.floor(value / stackSize);
+      const rem = value % stackSize;
+
+      if (showShulkerEl.checked) {
+        const threshold = Math.max(1, Number(shulkerThresholdEl.value) || 27);
+        const shulkers = Math.floor(stacks / threshold);
+        const remStacks = stacks % threshold;
+        const parts = [];
+
+        if (shulkers > 0) parts.push(`${shulkers} SB`);
+        if (remStacks > 0) parts.push(`${remStacks}${stackSize > 1 ? 's' : ''}`);
+        if (rem > 0) parts.push(rem);
+
+        if (parts.length) text = `${value} (${parts.join(' + ')})`;
+      } else if (stackSize > 1) {
+        const parts = [];
+        if (stacks > 0) parts.push(`${stacks}${stackSize > 1 ? 's' : ''}`);
+        if (rem > 0) parts.push(rem);
+        if (parts.length) text = `${value} (${parts.join(' + ')})`;
+      }
+    }
+
+    return text;
+  }
+
   function renderAll(){
     // sync pagination settings
     BOOK_WIDTH = Number(pageWidthEl.value) || 114;
@@ -467,33 +973,17 @@
     // IMPORTANT: do NOT pre-wrap or insert visual line breaks inside item text. Each item is a single entry.
     state.rows.forEach(r=>{
       const item = r['Item'] || r['item'] || '';
-      const total = Number(r['Total'] || r['total'] || 0);
-      const missing = r['Missing'] || r['missing'] || '';
-      const available = Number(r['Available'] || r['available'] || 0);
-
-      // total text with stack/shulker
-      let totalText = String(total);
-      if(showStackEl.checked){
-        const stacks = Math.floor(total/64);
-        const rem = total%64;
-        if(showShulkerEl.checked){
-          const threshold = Math.max(1, Number(shulkerThresholdEl.value)||27);
-          const shulkers = Math.floor(stacks/threshold);
-          const remStacks = stacks % threshold;
-          const parts = [];
-          if(shulkers>0) parts.push(shulkers + ' SB');
-          if(remStacks>0) parts.push(remStacks + 's');
-          if(rem>0) parts.push(rem);
-          if(parts.length) totalText = `${total} (${parts.join(' + ')})`;
-        } else {
-          totalText = `${total} (${stacks}s + ${rem})`;
-        }
-      }
+      const total = parseNumericField(r, ['Total', 'total']);
+      const missing = parseNumericField(r, ['Missing', 'missing']);
+      const available = parseNumericField(r, ['Available', 'available']);
+      const baseValue = baseValueModeEl.value === 'missing' ? missing : total;
+      const effectiveTotal = considerAvailableEl.checked ? Math.max(0, baseValue - available) : baseValue;
+      const totalText = formatCountText(effectiveTotal, item);
 
       const checkSym = enableChecklistEl.checked ? (checklistStyleEl.value==='unicode' ? '☐' : '[ ]') : '';
-      const statusText = (available && Number(available)>0) ? 'Done' : 'Need';
+      const statusText = available > 0 ? 'Done' : 'Need';
       const fmt = itemFormatEl.value || (enableChecklistEl.checked?'{check}{item}: {total}':'{item}: {total}');
-      const rendered = fmt.replace(/{item}/g,item).replace(/{total}/g,totalText).replace(/{missing}/g,missing).replace(/{available}/g,String(available)).replace(/{check}/g, checkSym).replace(/{status}/g,statusText);
+      const rendered = fmt.replace(/{item}/g,item).replace(/{total}/g,totalText).replace(/{missing}/g,String(missing)).replace(/{available}/g,String(available)).replace(/{check}/g, checkSym).replace(/{status}/g,statusText);
       // push the full rendered item as a single entry (preserve explicit newlines inside only if present,
       // but do not break them apart for pagination; the wrapping simulator will count visual lines)
       entries.push({type:'item', text: rendered});
@@ -533,49 +1023,16 @@
     // items
     state.rows.forEach(r=>{
       const item = r['Item'] || r['item'] || '';
-      const total = Number(r['Total'] || r['total'] || 0);
-      const missing = r['Missing'] || r['missing'] || '';
-      const available = Number(r['Available'] || r['available'] || 0);
-      let totalText = String(total);
-      const stackSize = stackSizes[item] ?? 64;
-
-      if (showStackEl.checked && total > stackSize) {
-          const stacks = Math.floor(total / stackSize);
-          const rem = total % stackSize;
-
-          if (showShulkerEl.checked) {
-              const threshold = Math.max(
-                  1,
-                  Number(shulkerThresholdEl.value) || 27
-              );
-
-              const shulkers = Math.floor(stacks / threshold);
-              const remStacks = stacks % threshold;
-
-              const parts = [];
-
-              if (shulkers > 0) parts.push(`${shulkers} SB`);
-              if (remStacks > 0) parts.push(`${remStacks}${stackSize > 1 ? 's' : ''}`);
-              if (rem > 0) parts.push(rem);
-
-              if (parts.length > 0) {
-                  totalText = `${total} (${parts.join(' + ')})`;
-              }
-          } else if (stackSize > 1) {
-              const parts = [];
-
-              if (stacks > 0) parts.push(`${stacks}${stackSize > 1 ? 's' : ''}`);
-              if (rem > 0) parts.push(rem);
-
-              if (parts.length > 0) {
-                  totalText = `${total} (${parts.join(' + ')})`;
-              }
-          }
-      }
+      const total = parseNumericField(r, ['Total', 'total']);
+      const missing = parseNumericField(r, ['Missing', 'missing']);
+      const available = parseNumericField(r, ['Available', 'available']);
+      const baseValue = baseValueModeEl.value === 'missing' ? missing : total;
+      const effectiveTotal = considerAvailableEl.checked ? Math.max(0, baseValue - available) : baseValue;
+      const totalText = formatCountText(effectiveTotal, item);
       const checkSym = enableChecklistEl.checked ? (checklistStyleEl.value==='unicode' ? '☐' : '[ ]') : '';
-      const statusText = (available && Number(available)>0) ? 'Done' : 'Need';
+      const statusText = available > 0 ? 'Done' : 'Need';
       const fmt = itemFormatEl.value || (enableChecklistEl.checked?'{check}{item}: {total}':'{item}: {total}');
-      const rendered = fmt.replace(/{item}/g,item).replace(/{total}/g,totalText).replace(/{missing}/g,missing).replace(/{available}/g,String(available)).replace(/{check}/g, checkSym).replace(/{status}/g,statusText);
+      const rendered = fmt.replace(/{item}/g,item).replace(/{total}/g,totalText).replace(/{missing}/g,String(missing)).replace(/{available}/g,String(available)).replace(/{check}/g, checkSym).replace(/{status}/g,statusText);
       contentStream.push({ type: 'item', text: rendered });
     });
     // footer
